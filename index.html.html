@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* MAIN CARD */
+.container {
+  width: 90%;
+  max-width: 400px;
+  background: rgba(255,255,255,0.1);
+  padding: 25px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #ffcc00;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* TIMER GRID */
+.timer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* BOX */
+.box {
+  background: rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.box:hover {
+  transform: scale(1.05);
+}
+
+.number {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.label {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* MESSAGE */
+#message {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #ffcc00;
+}
+
+/* DESKTOP ENHANCEMENT */
+@media (min-width: 600px) {
+  .timer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>⏳ Countdown Timer</h1>
+  <p>Select your date & time</p>
+
+  <input type="datetime-local" id="dateInput">
+  <button onclick="startCountdown()">Start Countdown</button>
+
+  <div class="timer">
+    <div class="box">
+      <div class="number" id="days">0</div>
+      <div class="label">Days</div>
+    </div>
+    <div class="box">
+      <div class="number" id="hours">0</div>
+      <div class="label">Hours</div>
+    </div>
+    <div class="box">
+      <div class="number" id="minutes">0</div>
+      <div class="label">Minutes</div>
+    </div>
+    <div class="box">
+      <div class="number" id="seconds">0</div>
+      <div class="label">Seconds</div>
+    </div>
+  </div>
+
+  <div id="message"></div>
+</div>
+
+<script>
+let countdown;
+
+function startCountdown() {
+  const input = document.getElementById("dateInput").value;
+
+  if (!input) {
+    alert("Please select a date");
+    return;
+  }
+
+  const targetDate = new Date(input).getTime();
+
+  clearInterval(countdown);
+
+  countdown = setInterval(() => {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      clearInterval(countdown);
+      document.getElementById("message").innerText = "🎉 Time Reached!";
+      updateUI(0,0,0,0);
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    updateUI(days, hours, minutes, seconds);
+
+  }, 1000);
+}
+
+function updateUI(d, h, m, s) {
+  document.getElementById("days").innerText = d;
+  document.getElementById("hours").innerText = h;
+  document.getElementById("minutes").innerText = m;
+  document.getElementById("seconds").innerText = s;
+}
+</script>
+
+</body>
+</html>
